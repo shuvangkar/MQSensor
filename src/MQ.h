@@ -2,6 +2,12 @@
 #define _MQ_H_
 #include "Arduino.h"
 
+typedef struct r0_t
+{
+  float R0;
+  bool calibDone;
+};
+
 class MQ
 {
   public:
