@@ -8,19 +8,42 @@ MQ::MQ(byte channel)
   _analogPin = channel;
 }
 
-void MQ::setRl(float RL)
+void MQ::setXY(float x1, float x2, float y1, float y2)
 {
-  _RL = RL;
-  _R0 = 0;
-}
-
-void MQ::setGraphPoints(float x1, float x2, float y1, float y2)
-{
-  _m = log10(y2 / y1) / log10(x2 / x1);
-  _c = log10(y1) - _m * log10(x1);
+  if(_readCalib !=NULL)
+  {
+    _readCalib(&_calib);
+  }
+  _calib.m = log10(y2 / y1) / log10(x2 / x1);
+  _calib.c = log10(y1) - _m * log10(x1);
   //  Serial.println(_m);
   //  Serial.println(_c);
 }
+
+void MQ::setR(float RL, float air_Rs_by_R0)
+{
+  _calib.RL = RL;
+  _calib.airRsR0 = air_Rs_by_R0;
+}
+
+void begin()
+{
+
+}
+
+// void MQ::setRl(float RL)
+// {
+//   _RL = RL;
+//   _R0 = 0;
+// }
+
+// void MQ::setGraphPoints(float x1, float x2, float y1, float y2)
+// {
+//   _m = log10(y2 / y1) / log10(x2 / x1);
+//   _c = log10(y1) - _m * log10(x1);
+//   //  Serial.println(_m);
+//   //  Serial.println(_c);
+// }
 
 float MQ::getPPM()
 {
