@@ -45,7 +45,14 @@ void MQ::runCalib()
 
 void begin()
 {
-
+  if(_calib.done == false)
+  {
+    runCalib();
+  }
+  else
+  {
+    Serial.println(F("Sensor is Calibrated"));
+  }
 }
 
 // void MQ::setRl(float RL)
