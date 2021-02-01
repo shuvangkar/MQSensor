@@ -1,6 +1,7 @@
 #include "MQ.h"
 
-#define TATAL_SAMPLE_R0 20
+#define TOTAL_SAMPLE_R0      20
+#define TOTAL_SAMPLE_PER_CAL 50
 
 MQ::MQ(byte channel)
 {
@@ -32,24 +33,36 @@ float MQ::getPPM()
   float ppm = pow(10, ppm_log);
   return ppm;
 }
+
 float MQ::_calculateRs()
 {
-  int Vrl = analogRead(_analogPin);
+  int Vrl;
+  for(uint8_t i = 0; i< TOTAL_SAMPLE_PER_CAL; i++)
+  {
+    Vrl += analogRead(_analogPin);
+  }
+
+  int Vrl = Vrl/TOTAL_SAMPLE_PER_CAL;
   float RS = ((1023 - Vrl) * _RL) / Vrl; //deduced from voltage divider equation
   return RS;
 }
 
 float MQ::calculateR0(float air_Rs_by_R0)
 {
-  float R0;
-  for (byte i = 0; i < TATAL_SAMPLE_R0; i++)
+  float Rs_Air;
+  for (byte i = 0; i < TOTAL_SAMPLE_R0; i++)
   {
-    R0 += _calculateRs();
+    Rs_Air += _calculateRs();
   }
-  R0 = R0 / TATAL_SAMPLE_R0;
-  R0 = R0 / air_Rs_by_R0;
-  _R0 = R0;
+  Rs_Air = Rs_Air / TOTAL_SAMPLE_R0;
+  
+  Rs_Air = Rs_Air / air_Rs_by_R0;
+  _R0 = Rs_Air;
   Serial.print("R0: ");Serial.println(_R0);
-  return R0;
+  if (_R0 < 0)
+  {
+    _R0 = 0; //no negative value accepted
+  } 
+  return _R0;
 }
 
