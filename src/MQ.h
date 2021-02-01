@@ -23,8 +23,10 @@ class MQ
   public:
     MQ(byte channel);
     // MQ(byte ch, float RL, float airRsR0);
+    void setMemFun(funCalib_t save, funCalib_t read);
     void setXY(float x1, float x2, float y1, float y2);
     void setR(float RL, float air_Rs_by_R0);
+    void runCalib();
     void begin();
     float getPPM();
     float getRs();
