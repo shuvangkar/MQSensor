@@ -23,20 +23,21 @@ class MQ
   public:
     MQ(byte channel);
     // MQ(byte ch, float RL, float airRsR0);
-    void setMemFun(funCalib_t save, funCalib_t read);
+    // void setMemFun(funCalib_t save, funCalib_t read);
+
     void setXY(float x1, float x2, float y1, float y2);
     void setR(float RL, float air_Rs_by_R0);
-    void runCalib();
-    void begin();
-    float getPPM();
-    float getRs();
-    void calibration();
-    // float Rs;
+    void runCalib(funCalib_t save);
+
+    void beginFromMem(funCalib_t read);
+    
+    float getPPM(); 
   private:
+    float getRs();
     float       _calculateRs();
     byte        _analogPin;
     calib_t     _calib;
-    funCalib_t  _saveCalib = NULL;
-    funCalib_t  _readCalib = NULL;
+    // funCalib_t  _saveCalib = NULL;
+    // funCalib_t  _readCalib = NULL;
 };
 #endif

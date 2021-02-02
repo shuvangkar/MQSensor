@@ -8,17 +8,6 @@ MQ::MQ(byte channel)
   _analogPin = channel;
 }
 
-void MQ::setMemFun(funCalib_t save, funCalib_t read)
-{
-  _saveCalib = save;
-  _readCalib = read;
-
-  if(_readCalib != NULL)
-  {
-    _readCalib(&_calib);
-  }
-}
-
 void MQ::setXY(float x1, float x2, float y1, float y2)
 {
   _calib.m = log10(y2 / y1) / log10(x2 / x1);
@@ -33,41 +22,33 @@ void MQ::setR(float RL, float air_Rs_by_R0)
   _calib.airRsR0 = air_Rs_by_R0;
 }
 
-void MQ::runCalib()
+void MQ::runCalib(funCalib_t save);
 {
   _calib.R0 = calculateR0(_calib.airRsR0);
   _calib.done  = true;
-  if(_saveCalib != NULL)
+  if(save != NULL)
   {
-    _saveCalib(&_calib);
+    save(&_calib);
   }
 }
 
-void begin()
+void MQ::beginFromMem(funCalib_t read);
 {
-  if(_calib.done == false)
+  if(read != NULL)
   {
-    runCalib();
+    read(&_calib);
+  }
+
+  if(_calib.done == true)
+  {
+     Serial.println(F("Sensor is Calibrated"));
   }
   else
   {
-    Serial.println(F("Sensor is Calibrated"));
+    Serial.println(F("Sensor not Calibrated"));
   }
 }
 
-// void MQ::setRl(float RL)
-// {
-//   _RL = RL;
-//   _R0 = 0;
-// }
-
-// void MQ::setGraphPoints(float x1, float x2, float y1, float y2)
-// {
-//   _m = log10(y2 / y1) / log10(x2 / x1);
-//   _c = log10(y1) - _m * log10(x1);
-//   //  Serial.println(_m);
-//   //  Serial.println(_c);
-// }
 
 float MQ::getPPM()
 {
