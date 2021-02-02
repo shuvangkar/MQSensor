@@ -74,7 +74,7 @@ float MQ::_calculateRs()
 
   Vrs = Vrs/TOTAL_SAMPLE_PER_CAL;
   // Serial.print(F("VRs : "));Serial.println(Vrs);
-  float RS = ((1023 - Vrs) * _calib.RL) / Vrs; //deduced from voltage divider equation
+  float RS = ((1023UL - Vrs) * _calib.RL) / Vrs; //deduced from voltage divider equation
   // Serial.print(F("Rs : "));Serial.println(RS);
   return RS;
 }
@@ -82,11 +82,14 @@ float MQ::_calculateRs()
 float MQ::calculateR0(float air_Rs_by_R0)
 {
   float Rs_Air;
-  // float  ratio = pow(10.0,air_Rs_by_R0);
+  float rs;
   for (byte i = 0; i < TOTAL_SAMPLE_R0; i++)
   {
-    Rs_Air += _calculateRs();
+  	rs = _calculateRs();
+  	// Serial.print(F("rs : "));Serial.println(rs);
+    Rs_Air += rs;
   }
+  // Serial.print(F("R0 Sum :")); Serial.println(Rs_Air);
   Rs_Air = Rs_Air / TOTAL_SAMPLE_R0;
   
   Rs_Air = Rs_Air / air_Rs_by_R0;
