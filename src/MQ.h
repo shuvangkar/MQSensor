@@ -32,6 +32,7 @@ class MQ
     void beginFromMem(funCalib_t read);
 
     float getPPM(); 
+    void printCalib(calib_t *cPtr);
   private:
     float _calculateRs();
     float calculateR0(float air_Rs_by_R0);

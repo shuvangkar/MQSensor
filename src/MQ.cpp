@@ -99,3 +99,13 @@ float MQ::calculateR0(float air_Rs_by_R0)
   return Rs_Air;
 }
 
+void MQ::printCalib(calib_t *cPtr)
+{
+  Serial.println(F("<--MQ Calibration---->"));
+  Serial.print(F("c : "));Serial.println(cPtr -> c);
+  Serial.print(F("m : "));Serial.println(cPtr -> m);
+  Serial.print(F("RL : "));Serial.println(cPtr -> RL);
+  Serial.print(F("R0 : "));Serial.println(cPtr -> R0);
+  Serial.print(F("airRsR0 : "));Serial.println(cPtr -> airRsR0);
+  Serial.print(F("done : "));Serial.println(cPtr -> done);
+}
