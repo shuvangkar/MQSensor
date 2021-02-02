@@ -1,7 +1,7 @@
 #include "MQ.h"
 #include "EEPROM.h"
 
-//#define DO_CALIBRATION
+#define DO_CALIBRATION
 
 #define MQ4_EEP_ADDR 0
 #define MQ4_AIR_RS_R0_RATIO     4.4f
@@ -36,8 +36,8 @@ void saveCalib(calib_t *cPtr)
   for(uint8_t i = 0; i<sizeof(calib_t);i++)
   {
     EEPROM.update(MQ4_EEP_ADDR+i, *(ptr+i));
-    Serial.println(*(ptr+i));
   }
+  mq4.printCalib(cPtr);
 }
 void readCalib(calib_t *cPtr)
 {
@@ -46,8 +46,6 @@ void readCalib(calib_t *cPtr)
   for(uint8_t i = 0 ; i< sizeof(calib_t); i++)
   {
     *(ptr+i) = EEPROM.read(MQ4_EEP_ADDR+i);
-//    Serial.println(*(ptr+i));
   }
   mq4.printCalib(cPtr);
-//  return cPtr;
 }

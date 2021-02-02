@@ -81,11 +81,13 @@ float MQ::_calculateRs()
 
 float MQ::calculateR0(float air_Rs_by_R0)
 {
+	Serial.println(F("Calibrating.."));
   float Rs_Air;
   float rs;
   for (byte i = 0; i < TOTAL_SAMPLE_R0; i++)
   {
   	rs = _calculateRs();
+  	delay(100);
   	// Serial.print(F("rs : "));Serial.println(rs);
     Rs_Air += rs;
   }
