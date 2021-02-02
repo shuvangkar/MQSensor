@@ -7,7 +7,7 @@ typedef struct calib_t
 {
   float c;
   float m;
-  float RL,
+  float RL;
   float R0;
   float airRsR0;
   bool  done;
@@ -30,13 +30,13 @@ class MQ
     void runCalib(funCalib_t save);
 
     void beginFromMem(funCalib_t read);
-    
+
     float getPPM(); 
   private:
-    float getRs();
-    float       _calculateRs();
-    byte        _analogPin;
-    calib_t     _calib;
+    float _calculateRs();
+    float calculateR0(float air_Rs_by_R0);
+    byte  _analogPin;
+    calib_t  _calib;
     // funCalib_t  _saveCalib = NULL;
     // funCalib_t  _readCalib = NULL;
 };

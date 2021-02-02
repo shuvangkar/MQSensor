@@ -11,7 +11,7 @@ MQ::MQ(byte channel)
 void MQ::setXY(float x1, float x2, float y1, float y2)
 {
   _calib.m = log10(y2 / y1) / log10(x2 / x1);
-  _calib.c = log10(y1) - _m * log10(x1);
+  _calib.c = log10(y1) - _calib.m * log10(x1);
   //  Serial.println(_m);
   //  Serial.println(_c);
 }
@@ -22,7 +22,7 @@ void MQ::setR(float RL, float air_Rs_by_R0)
   _calib.airRsR0 = air_Rs_by_R0;
 }
 
-void MQ::runCalib(funCalib_t save);
+void MQ::runCalib(funCalib_t save)
 {
   _calib.R0 = calculateR0(_calib.airRsR0);
   _calib.done  = true;
@@ -32,7 +32,7 @@ void MQ::runCalib(funCalib_t save);
   }
 }
 
-void MQ::beginFromMem(funCalib_t read);
+void MQ::beginFromMem(funCalib_t read)
 {
   if(read != NULL)
   {
@@ -54,10 +54,10 @@ float MQ::getPPM()
 {
   // Rs = _calculateRs();
 
-  float ratio_RS_R0 = (_calculateRs() / _R0);
+  float ratio_RS_R0 = (_calculateRs() / _calib.R0);
   //Serial.print(F("Rs/R0: "));Serial.println(ratio_RS_R0, 4);
 
-  float ppm_log = (log10(ratio_RS_R0) - _c) / _m; //x = (y-c)/m
+  float ppm_log = (log10(ratio_RS_R0) - _calib.c) /_calib.m; //x = (y-c)/m
   float ppm = pow(10, ppm_log);
   return ppm;
 }
@@ -70,8 +70,8 @@ float MQ::_calculateRs()
     Vrl += analogRead(_analogPin);
   }
 
-  int Vrl = Vrl/TOTAL_SAMPLE_PER_CAL;
-  float RS = ((1023 - Vrl) * _RL) / Vrl; //deduced from voltage divider equation
+  Vrl = Vrl/TOTAL_SAMPLE_PER_CAL;
+  float RS = ((1023 - Vrl) * _calib.RL) / Vrl; //deduced from voltage divider equation
   return RS;
 }
 
